@@ -1,11 +1,8 @@
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using System.Reflection;
+using Lamar.Microsoft.DependencyInjection;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Hosting;
 
 namespace Basket.API
 {
@@ -13,7 +10,11 @@ namespace Basket.API
 	{
 		public static void Main(string[] args)
 		{
-			CreateHostBuilder(args).Build().Run();
+			Console.WriteLine(Assembly.GetEntryAssembly());
+			CreateHostBuilder(args)
+				.UseLamar()
+				.Build()
+				.Run();
 		}
 
 		public static IHostBuilder CreateHostBuilder(string[] args) =>

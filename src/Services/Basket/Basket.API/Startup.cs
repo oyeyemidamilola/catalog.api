@@ -1,4 +1,6 @@
+using Basket.API.Configuration;
 using Basket.API.Repositories;
+using Lamar;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -18,18 +20,15 @@ namespace Basket.API
 		public IConfiguration Configuration { get; }
 
 		// This method gets called by the runtime. Use this method to add services to the container.
-		public void ConfigureServices(IServiceCollection services)
+		public void ConfigureContainer(ServiceRegistry services)
 		{
-			services.AddStackExchangeRedisCache(option =>
-			{
-				option.Configuration = Configuration.GetValue<string>("Redis:Connection");
-			});
 			services.AddControllers();
 			services.AddSwaggerGen(c =>
 			{
 				c.SwaggerDoc("v1", new OpenApiInfo { Title = "Basket.API", Version = "v1" });
 			});
-			services.AddTransient<IBasketRepository, BasketRepository>();
+			services.ConfigureRedis(Configuration);
+			services.ConfigureLamar();
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
