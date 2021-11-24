@@ -1,3 +1,4 @@
+using Basket.API.Repositories;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -28,6 +29,7 @@ namespace Basket.API
 			{
 				c.SwaggerDoc("v1", new OpenApiInfo { Title = "Basket.API", Version = "v1" });
 			});
+			services.AddTransient<IBasketRepository, BasketRepository>();
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
