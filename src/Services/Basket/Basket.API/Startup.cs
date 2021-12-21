@@ -1,5 +1,4 @@
 using Basket.API.Configuration;
-using Basket.API.Repositories;
 using Lamar;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
