@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Basket.API.Entities;
+using Basket.API.GrpcClients;
 using Basket.API.Repositories;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -11,10 +12,12 @@ namespace Basket.API.Controllers
 	public class BasketController : ControllerBase
 	{
 		private readonly IBasketRepository _basketRepository;
+		private readonly DiscountGrpcClient _discountGrpcClient;
 
-		public BasketController(IBasketRepository basketRepository)
+		public BasketController(IBasketRepository basketRepository, DiscountGrpcClient discountGrpcClient)
 		{
 			_basketRepository = basketRepository;
+			_discountGrpcClient = discountGrpcClient;
 		}
 
 		[HttpGet("{userName}", Name = nameof(GetBasket))]
@@ -37,6 +40,12 @@ namespace Basket.API.Controllers
 			if (string.IsNullOrEmpty(cart.UserName))
 			{
 				return BadRequest("Username can not be empty");
+			}
+
+			foreach (var cartItem in cart.Items)
+			{
+				var coupon = await _discountGrpcClient.GetDiscount(cartItem.ProductName);
+				cartItem.Price -= coupon.Amount;
 			}
 			var result = await _basketRepository.UpdateBasket(cart);
 			return CreatedAtAction(nameof(GetBasket), new {userName = result.UserName}, result);

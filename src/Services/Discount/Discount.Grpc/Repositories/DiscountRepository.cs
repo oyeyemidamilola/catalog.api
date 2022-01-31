@@ -19,7 +19,7 @@ namespace Discount.Grpc.Repositories
 			using var connection = new NpgsqlConnection(_configuration.GetValue<string>("DatabaseSettings:ConnectionString"));
 			var sql = "SELECT * FROM Coupon WHERE ProductName = @ProductName";
 			var coupon = await connection.QueryFirstOrDefaultAsync<Coupon>(sql, new { ProductName = productName });
-			return coupon ?? new Coupon { Description = "No discount", Amount = default };
+			return coupon ?? new Coupon { Description = "No discount", Amount = default, ProductName = string.Empty };
 		}
 
 		public async Task<bool> CreateDiscount(Coupon coupon)
